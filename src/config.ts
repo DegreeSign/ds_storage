@@ -6,7 +6,8 @@ let
     STORAGE_KEY = 'appData',
     DB_NAME = 'appDB',
     STORE_NAME = 'appStorage',
-    ENCRYPTION_KEY: CryptoKey | undefined;
+    ENCRYPTION_KEY: CryptoKey | undefined,
+    HIDE_ERRORS = false;
 
 const
     CONFIG_STORAGE_KEY = `appConfig`,
@@ -21,6 +22,7 @@ const
                 STORE_NAME = config.storeName || STORE_NAME;
                 ENCRYPTION_KEY = config.encryptionKey ? await cryptoKey(config.encryptionKey)
                     : undefined;
+                HIDE_ERRORS = config.hideErrors ?? HIDE_ERRORS;
             };
         } catch (e) {
             console.log(`initialiseConfig failed`, e);
@@ -68,10 +70,11 @@ const
     /** Get Configuration */
     getConfig = () => {
         return {
-            STORAGE_KEY,
-            DB_NAME,
-            STORE_NAME,
+            storageKey: STORAGE_KEY,
+            dbName: DB_NAME,
+            storeName: STORE_NAME,
             ENCRYPTION_KEY,
+            hideErrors: HIDE_ERRORS,
         }
     },
     /** Migrate Data */

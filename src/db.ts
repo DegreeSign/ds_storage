@@ -9,10 +9,10 @@ const
         version = 1
     }: DBConfig = {}): Promise<IDBDatabase> => {
         return new Promise((resolve, reject) => {
-            dbName = dbName || getConfig().DB_NAME;
+            dbName = dbName || getConfig().dbName;
             const request = indexedDB.open(dbName, version);
             request.onupgradeneeded = () => {
-                storeName = storeName || getConfig().STORE_NAME;
+                storeName = storeName || getConfig().storeName;
                 const db = request.result;
                 if (!db.objectStoreNames.contains(storeName))
                     db.createObjectStore(storeName, { keyPath: 'id' });

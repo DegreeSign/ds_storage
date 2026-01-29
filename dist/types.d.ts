@@ -26,5 +26,6 @@ interface ConfigParams {
     dbName?: string;
     storeName?: string;
     encryptionKey?: string;
+    hideErrors?: boolean;
 }
 export { DBConfig, DBRead, DBSave, MigrationParams, StorageParams, ConfigParams, };

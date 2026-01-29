@@ -10,14 +10,14 @@ const
     }: StorageParams<T>): Promise<boolean> => {
         try {
             const {
-                DB_NAME,
-                STORE_NAME,
+                dbName,
+                storeName,
             } = getConfig();
             return await saveDB({
                 key,
                 data: data ? JSON.stringify(data) : undefined,
-                dbName: DB_NAME,
-                storeName: STORE_NAME,
+                dbName,
+                storeName,
             })
         } catch (e) {
             console.log(`saveLarge failed`, e);
@@ -31,13 +31,13 @@ const
         try {
             const
                 {
-                    DB_NAME,
-                    STORE_NAME,
+                    dbName,
+                    storeName,
                 } = getConfig(),
                 data = await readDB({
                     key,
-                    dbName: DB_NAME,
-                    storeName: STORE_NAME,
+                    dbName,
+                    storeName,
                 });
             return data ? JSON.parse(data) : undefined;
         } catch (e) {

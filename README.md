@@ -19,7 +19,7 @@ import {
 Use in browsers through CDN
 ```html
 <script 
-    src="https://cdn.jsdelivr.net/npm/@degreesign/storage@1.0.3/dist/browser/degreesign.min.js"
+    src="https://cdn.jsdelivr.net/npm/@degreesign/storage@1.0.4/dist/browser/degreesign.min.js"
 ></script>
 ```
 

@@ -31,6 +31,7 @@ interface ConfigParams {
     dbName?: string;
     storeName?: string;
     encryptionKey?: string;
+    hideErrors?: boolean;
 }
 
 export {

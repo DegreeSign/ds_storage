@@ -4,10 +4,11 @@ declare const
 configureStorage: ({ storageKey, dbName, storeName, encryptionKey }: ConfigParams) => Promise<void>, 
 /** Get Configuration */
 getConfig: () => {
-    STORAGE_KEY: string;
-    DB_NAME: string;
-    STORE_NAME: string;
+    storageKey: string;
+    dbName: string;
+    storeName: string;
     ENCRYPTION_KEY: CryptoKey | undefined;
+    hideErrors: boolean;
 }, 
 /** Migrate Data */
 migrateSecure: ({ storedKeys, newEncryptionKey, newDbName, newStoreName, }: MigrationParams) => Promise<void>;
