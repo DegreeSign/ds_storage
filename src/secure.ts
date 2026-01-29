@@ -1,4 +1,4 @@
-import { getConfig } from "./config";
+import { getConfig, showError } from "./config";
 import { saveDB, readDB } from "./db";
 import { encrypt, decrypt } from "./encrypt";
 import { StorageParams } from "./types";
@@ -21,7 +21,7 @@ const
                 storeName,
             });
         } catch (e) {
-            console.log(`saveSecure failed`, e);
+            if (showError()) console.log(`saveSecure failed`, e);
         };
         return false
     },
@@ -42,7 +42,7 @@ const
                 });
             return data ? await decrypt<T>(data) : undefined;
         } catch (e) {
-            console.log(`readSecure failed`, e);
+            if (showError()) console.log(`readSecure failed`, e);
         };
     };
 

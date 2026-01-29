@@ -1,4 +1,4 @@
-import { getConfig } from "./config";
+import { getConfig, showError } from "./config";
 
 const
     /** Crypto Key Processing */
@@ -27,7 +27,7 @@ const
                 );
             return keyProcessed
         } catch (e) {
-            console.log(`processKey failed`, e);
+            if (showError()) console.log(`processKey failed`, e);
         };
     },
     /** AES-GCM data encryption using custom key */
@@ -47,7 +47,7 @@ const
             result.set(encryptedArray, iv.length);
             return btoa(String.fromCharCode(...result));
         } catch (e) {
-            console.log(`encryptData failed`, e);
+            if (showError()) console.log(`encryptData failed`, e);
             try { return JSON.stringify(data); } catch (e) { };
         };
     },
@@ -65,7 +65,7 @@ const
                 );
             return JSON.parse(new TextDecoder().decode(decrypted)) as T;
         } catch (e) {
-            console.log(`decryptData failed`, e);
+            if (showError()) console.log(`decryptData failed`, e);
         };
     },
     /** AES-GCM data encryption using set key */
@@ -77,7 +77,7 @@ const
             if (!ENCRYPTION_KEY) return JSON.stringify(data);
             return await encryptData(data, ENCRYPTION_KEY);
         } catch (e) {
-            console.log(`encrypt failed`, e);
+            if (showError()) console.log(`encrypt failed`, e);
             try { return JSON.stringify(data); } catch (e) { };
         };
     },
@@ -90,7 +90,7 @@ const
             if (!ENCRYPTION_KEY) return JSON.parse(encrypted) as T;
             return await decryptData(encrypted, ENCRYPTION_KEY);
         } catch (e) {
-            console.log(`decrypt failed`, e);
+            if (showError()) console.log(`decrypt failed`, e);
         };
     };
 

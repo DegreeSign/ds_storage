@@ -1,4 +1,4 @@
-import { getConfig } from "./config";
+import { getConfig, showError } from "./config";
 import { DBConfig, DBRead, DBSave } from "./types";
 
 const
@@ -19,7 +19,7 @@ const
             };
             request.onsuccess = () => resolve(request.result);
             request.onerror = () => {
-                console.log(`openDB failed`, request.error);
+                if (showError()) console.log(`openDB failed`, request.error);
                 reject(request.error);
             };
         });
@@ -44,13 +44,13 @@ const
                         : store.delete(key); // remove key when no data is provided
                 request.onsuccess = () => resolve(true);
                 request.onerror = () => {
-                    console.log(`saveDB error`, request.error);
+                    if (showError()) console.log(`saveDB error`, request.error);
                     resolve(false);
                 };
                 db.close();
             });
         } catch (e) {
-            console.log(`saveSecure failed`, e);
+            if (showError()) console.log(`saveSecure failed`, e);
         };
         return false
     },
@@ -72,13 +72,13 @@ const
                     request = store.get(key);
                 request.onsuccess = () => resolve(request?.result?.data as string | undefined);
                 request.onerror = () => {
-                    console.log(`readDB error`, request.error);
+                    if (showError()) console.log(`readDB error`, request.error);
                     resolve(undefined);
                 };
                 db.close();
             });
         } catch (e) {
-            console.log(`readDB failed`, e);
+            if (showError()) console.log(`readDB failed`, e);
         };
     };
 

@@ -1,4 +1,4 @@
-import { getConfig } from "./config";
+import { getConfig, showError } from "./config";
 import { saveDB, readDB } from "./db";
 import { StorageParams } from "./types";
 
@@ -20,7 +20,7 @@ const
                 storeName,
             })
         } catch (e) {
-            console.log(`saveLarge failed`, e);
+            if (showError()) console.log(`saveLarge failed`, e);
         };
         return false
     },
@@ -41,7 +41,7 @@ const
                 });
             return data ? JSON.parse(data) : undefined;
         } catch (e) {
-            console.log(`readLarge failed`, e);
+            if (showError()) console.log(`readLarge failed`, e);
         };
     };
 

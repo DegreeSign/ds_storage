@@ -1,3 +1,4 @@
+import { showError } from "./config";
 import { StorageParams } from "./types";
 
 const
@@ -7,7 +8,7 @@ const
             if (data === undefined) localStorage.removeItem(key);
             else localStorage.setItem(key, JSON.stringify(data));
         } catch (e) {
-            console.log(`saveData failed`, e);
+            if (showError()) console.log(`saveData failed`, e);
         };
     },
     /** Read Data (uses localStorage)*/
@@ -16,7 +17,7 @@ const
             const item = localStorage.getItem(key);
             return item ? JSON.parse(item) as T : undefined;
         } catch (e) {
-            console.log(`readData failed`, e);
+            if (showError()) console.log(`readData failed`, e);
         };
     };
 

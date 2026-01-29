@@ -25,7 +25,7 @@ const
                 HIDE_ERRORS = config.hideErrors ?? HIDE_ERRORS;
             };
         } catch (e) {
-            console.log(`initialiseConfig failed`, e);
+            if (showError()) console.log(`initialiseConfig failed`, e);
         };
     },
     /** Configure Storage System */
@@ -33,7 +33,8 @@ const
         storageKey,
         dbName,
         storeName,
-        encryptionKey
+        encryptionKey,
+        hideErrors
     }: ConfigParams): Promise<void> => {
         try {
 
@@ -63,8 +64,10 @@ const
             // Set or update encryption key
             ENCRYPTION_KEY = encryptionKey ? await cryptoKey(encryptionKey)
                 : undefined;
+
+            HIDE_ERRORS = hideErrors ?? HIDE_ERRORS;
         } catch (e) {
-            console.log(`configureStorage failed`, e);
+            if (showError()) console.log(`configureStorage failed`, e);
         };
     },
     /** Get Configuration */
@@ -77,6 +80,7 @@ const
             hideErrors: HIDE_ERRORS,
         }
     },
+    showError = () => !HIDE_ERRORS,
     /** Migrate Data */
     migrateSecure = async ({
         storedKeys,
@@ -85,7 +89,7 @@ const
         newStoreName,
     }: MigrationParams): Promise<void> => {
 
-        console.log(`Data migration started...`);
+        if (showError()) console.log(`Data migration started...`);
 
         // record old keys
         const
@@ -125,15 +129,16 @@ const
                         storeName: STORE_NAME
                     });
             } catch (e) {
-                console.log(`migrateSecure failed`, key, e);
+                if (showError()) console.log(`migrateSecure failed`, key, e);
             };
         };
 
-        console.log(`Data migration finished!`);
+        if (showError()) console.log(`Data migration finished!`);
     };
 
 export {
     configureStorage,
     getConfig,
+    showError,
     migrateSecure,
 };

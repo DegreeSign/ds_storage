@@ -19,7 +19,7 @@ import {
 Use in browsers through CDN
 ```html
 <script 
-    src="https://cdn.jsdelivr.net/npm/@degreesign/storage@1.0.4/dist/browser/degreesign.min.js"
+    src="https://cdn.jsdelivr.net/npm/@degreesign/storage@1.0.5/dist/browser/degreesign.min.js"
 ></script>
 ```
 
@@ -41,7 +41,8 @@ await configureStorage({
     storageKey: 'app_name',
     dbName: 'database_name',
     storeName: 'dataset_name',
-    encryptionKey: 'encryption_key'
+    encryptionKey: 'encryption_key',
+    hideErrors: true,
 });
 
 // sample data
