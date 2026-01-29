@@ -1,5 +1,5 @@
+import { readDB, saveDB } from "./db";
 import { cryptoKey, decryptData, encryptData } from "./encrypt";
-import { readDB, saveDB } from "./secure";
 import { ConfigParams, MigrationParams } from "./types";
 
 let
@@ -22,8 +22,8 @@ const
                 ENCRYPTION_KEY = config.encryptionKey ? await cryptoKey(config.encryptionKey)
                     : undefined;
             };
-        } catch (error) {
-            console.log(`initialiseConfig failed`, error);
+        } catch (e) {
+            console.log(`initialiseConfig failed`, e);
         };
     },
     /** Configure Storage System */
@@ -34,6 +34,10 @@ const
         encryptionKey
     }: ConfigParams): Promise<void> => {
         try {
+
+            // Initialize configuration on start
+            await initialiseConfig();
+
             // Check if any configuration has changed
             const prevConfig = localStorage.getItem(CONFIG_STORAGE_KEY);
             let prevConfigParsed: ConfigParams | undefined;
@@ -57,9 +61,18 @@ const
             // Set or update encryption key
             ENCRYPTION_KEY = encryptionKey ? await cryptoKey(encryptionKey)
                 : undefined;
-        } catch (error) {
-            console.log('Error in configureStorage:', error);
+        } catch (e) {
+            console.log(`configureStorage failed`, e);
         };
+    },
+    /** Get Configuration */
+    getConfig = () => {
+        return {
+            STORAGE_KEY,
+            DB_NAME,
+            STORE_NAME,
+            ENCRYPTION_KEY,
+        }
     },
     /** Migrate Data */
     migrateSecure = async ({
@@ -108,23 +121,16 @@ const
                         dbName: DB_NAME,
                         storeName: STORE_NAME
                     });
-            } catch (error) {
-                console.log(`migrateSecure failed`, key, error);
+            } catch (e) {
+                console.log(`migrateSecure failed`, key, e);
             };
         };
 
         console.log(`Data migration finished!`);
     };
 
-// Initialize configuration on start
-initialiseConfig();
-
 export {
-    STORAGE_KEY,
-    DB_NAME,
-    STORE_NAME,
-    ENCRYPTION_KEY,
-    initialiseConfig,
     configureStorage,
+    getConfig,
     migrateSecure,
 };

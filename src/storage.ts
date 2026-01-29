@@ -6,8 +6,8 @@ const
         try {
             if (data === undefined) localStorage.removeItem(key);
             else localStorage.setItem(key, JSON.stringify(data));
-        } catch (error) {
-            console.log(`saveData failed`, error);
+        } catch (e) {
+            console.log(`saveData failed`, e);
         };
     },
     /** Read Data (uses localStorage)*/
@@ -15,9 +15,8 @@ const
         try {
             const item = localStorage.getItem(key);
             return item ? JSON.parse(item) as T : undefined;
-        } catch (error) {
-            console.log(`readData failed`, error);
-            return;
+        } catch (e) {
+            console.log(`readData failed`, e);
         };
     };
 

@@ -17,7 +17,7 @@ import {
 
 ## Browser Integration
 Use in browsers through CDN
-`<script src="https://cdn.jsdelivr.net/npm/@degreesign/storage@1.0.0/dist/browser/degreesign.min.js"></script>`
+`<script src="https://cdn.jsdelivr.net/npm/@degreesign/storage@1.0.2/dist/browser/degreesign.min.js"></script>`
 
 ```typescript
 const {

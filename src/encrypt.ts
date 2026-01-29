@@ -1,4 +1,4 @@
-import { ENCRYPTION_KEY } from "./config";
+import { getConfig } from "./config";
 
 const
     /** Crypto Key Processing */
@@ -26,8 +26,8 @@ const
                     ['encrypt', 'decrypt']
                 );
             return keyProcessed
-        } catch (error) {
-            console.log(`processKey failed`, error);
+        } catch (e) {
+            console.log(`processKey failed`, e);
         };
     },
     /** AES-GCM data encryption using custom key */
@@ -46,8 +46,8 @@ const
             result.set(iv);
             result.set(encryptedArray, iv.length);
             return btoa(String.fromCharCode(...result));
-        } catch (error) {
-            console.log(`encryptData failed`, error);
+        } catch (e) {
+            console.log(`encryptData failed`, e);
             try { return JSON.stringify(data); } catch (e) { };
         };
     },
@@ -64,9 +64,8 @@ const
                     data
                 );
             return JSON.parse(new TextDecoder().decode(decrypted)) as T;
-        } catch (error) {
-            console.log(`decryptData failed`, error);
-            return;
+        } catch (e) {
+            console.log(`decryptData failed`, e);
         };
     },
     /** AES-GCM data encryption using set key */
@@ -74,10 +73,11 @@ const
         data: T
     ): Promise<string | undefined> => {
         try {
+            const { ENCRYPTION_KEY } = getConfig();
             if (!ENCRYPTION_KEY) return JSON.stringify(data);
             return await encryptData(data, ENCRYPTION_KEY);
-        } catch (error) {
-            console.log(`encrypt failed`, error);
+        } catch (e) {
+            console.log(`encrypt failed`, e);
             try { return JSON.stringify(data); } catch (e) { };
         };
     },
@@ -86,11 +86,11 @@ const
         encrypted: string
     ): Promise<T | undefined> => {
         try {
+            const { ENCRYPTION_KEY } = getConfig();
             if (!ENCRYPTION_KEY) return JSON.parse(encrypted) as T;
             return await decryptData(encrypted, ENCRYPTION_KEY);
-        } catch (error) {
-            console.log(`decrypt failed`, error);
-            return;
+        } catch (e) {
+            console.log(`decrypt failed`, e);
         };
     };
 

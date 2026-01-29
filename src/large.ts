@@ -1,11 +1,10 @@
 import { getConfig } from "./config";
 import { saveDB, readDB } from "./db";
-import { encrypt, decrypt } from "./encrypt";
 import { StorageParams } from "./types";
 
 const
-    /** Save Secure Data (uses IndexedDB)*/
-    saveSecure = async <T>({
+    /** Save Large Data (uses IndexedDB)*/
+    saveLarge = async <T>({
         key,
         data
     }: StorageParams<T>): Promise<boolean> => {
@@ -16,17 +15,17 @@ const
             } = getConfig();
             return await saveDB({
                 key,
-                data: data ? await encrypt(data) : undefined,
+                data: data ? JSON.stringify(data) : undefined,
                 dbName: DB_NAME,
                 storeName: STORE_NAME,
-            });
+            })
         } catch (e) {
-            console.log(`saveSecure failed`, e);
+            console.log(`saveLarge failed`, e);
         };
         return false
     },
-    /** Read Secure Data (uses IndexedDB)*/
-    readSecure = async <T>(
+    /** Read Large Data (uses IndexedDB)*/
+    readLarge = async <T>(
         key: string
     ): Promise<T | undefined> => {
         try {
@@ -40,13 +39,13 @@ const
                     dbName: DB_NAME,
                     storeName: STORE_NAME,
                 });
-            return data ? await decrypt<T>(data) : undefined;
+            return data ? JSON.parse(data) : undefined;
         } catch (e) {
-            console.log(`readSecure failed`, e);
+            console.log(`readLarge failed`, e);
         };
     };
 
 export {
-    saveSecure,
-    readSecure,
+    saveLarge,
+    readLarge,
 };
