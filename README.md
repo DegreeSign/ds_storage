@@ -8,28 +8,11 @@ Install using `yarn add @degreesign/storage` or `npm install @degreesign/storage
 ```typescript
 import {
     configureStorage,
+    saveData,
+    readData,
+    saveSecure,
+    readSecure,
 } from "@degreesign/storage";
-
-// configure storage system
-await configureStorage({
-    storageKey: 'newAppData',
-    dbName: 'myDatabase',
-    storeName: 'users',
-    encryptionKey: 'my-secret-key-123'
-});
-
-// quick save/read (unencrypted) only suitable for smaller data
-const user: UserData = { id: `1`, name: 'Hasn', email: 'hasn@example.com' };
-saveData({ key: `userData`, data: user });
-const storedUser = readData<UserData>(`userData`);
-console.log('Storage data:', storedUser);
-saveData({ key: `userData` }); // Removes the key and data
-
-// secure save/read (encrypted) useful for larger data
-await saveSecure({ key: `userData`, data: user });
-const dbUser = await readSecure<UserData>(`userData`);
-console.log('Database data:', dbUser);
-await saveSecure({ key: `userData` }); // Removes the key and data
 ```
 
 ## Browser Integration
@@ -37,24 +20,47 @@ Use in browsers through CDN
 `<script src="https://cdn.jsdelivr.net/npm/@degreesign/storage@1.0.0/dist/browser/degreesign.min.js"></script>`
 
 ```typescript
+const {
+    configureStorage,
+    saveData,
+    readData,
+    saveSecure,
+    readSecure,
+} = window.stored;
+```
+
+## Usage
+
+```typescript
 // configure storage system
-await stored.configureStorage({
-    storageKey: 'newAppData',
-    dbName: 'myDatabase',
-    storeName: 'users',
-    encryptionKey: 'my-secret-key-123'
+await configureStorage({
+    storageKey: 'app_name',
+    dbName: 'database_name',
+    storeName: 'dataset_name',
+    encryptionKey: 'encryption_key'
 });
 
-// quick save/read (unencrypted) only suitable for smaller data
-const user: UserData = { id: `1`, name: 'Hasn', email: 'hasn@example.com' };
-stored.saveData({ key: `userData`, data: user });
-const storedUser = stored.readData<UserData>(`userData`);
-console.log('Storage data:', storedUser);
-stored.saveData({ key: `userData` }); // Removes the key
+// sample data
+const 
+    key = `sample_key`,
+    data: SampleType = { id: `1`, name: 'Hasn', email: 'hasn@example.com' };
 
-// secure save/read (encrypted) useful for larger data
-await stored.saveSecure({ key: `userData`, data: user });
-const dbUser = await stored.readSecure<UserData>(`userData`);
-console.log('Database data:', dbUser);
-await stored.saveSecure({ key: `userData` }); // Removes the key
+/** quick unencrypted, only suitable for smaller data */
+// save 
+saveData({ key, data });
+// read
+const unsecureData = readData<SampleType>(key);
+console.log(`unsecureData`, unsecureData);
+// clear
+saveData({ key });
+
+
+/** secure, useful for larger data */
+// save
+await saveSecure({ key, data });
+// read
+const secureData = await readSecure<SampleType>(key);
+console.log(`secureData`, secureData);
+// clear
+await saveSecure({ key });
 ```
