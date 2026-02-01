@@ -10,24 +10,6 @@ let
     HIDE_ERRORS = false;
 
 const
-    CONFIG_STORAGE_KEY = `appConfig`,
-    /** Initialize configurable variables from localStorage on start */
-    initialiseConfig = async () => {
-        try {
-            const configData = localStorage.getItem(CONFIG_STORAGE_KEY);
-            if (configData) {
-                const config = JSON.parse(configData) as ConfigParams;
-                STORAGE_KEY = config.storageKey;
-                DB_NAME = config.dbName || DB_NAME;
-                STORE_NAME = config.storeName || STORE_NAME;
-                ENCRYPTION_KEY = config.encryptionKey ? await cryptoKey(config.encryptionKey)
-                    : undefined;
-                HIDE_ERRORS = config.hideErrors ?? HIDE_ERRORS;
-            };
-        } catch (e) {
-            if (showError()) console.log(`initialiseConfig failed`, e);
-        };
-    },
     /** Configure Storage System */
     configureStorage = async ({
         storageKey,
@@ -38,15 +20,6 @@ const
     }: ConfigParams): Promise<void> => {
         try {
 
-            // Initialize configuration on start
-            await initialiseConfig();
-
-            // Check if any configuration has changed
-            const prevConfig = localStorage.getItem(CONFIG_STORAGE_KEY);
-            let prevConfigParsed: ConfigParams | undefined;
-            if (prevConfig)
-                prevConfigParsed = JSON.parse(prevConfig) as ConfigParams;
-
             // Store new configuration
             const config: ConfigParams = {
                 storageKey,
@@ -54,7 +27,6 @@ const
                 storeName: storeName || STORE_NAME,
                 encryptionKey
             };
-            localStorage.setItem(CONFIG_STORAGE_KEY, JSON.stringify(config));
 
             // Update variables
             STORAGE_KEY = storageKey;

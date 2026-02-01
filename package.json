@@ -1,6 +1,6 @@
 {
   "name": "@degreesign/storage",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "DegreeSign Storage System",
   "main": "dist/node/degreesign.node.min.js",
   "module": "dist/node/degreesign.node.min.js",
