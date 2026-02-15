@@ -1,4 +1,4 @@
-import { getConfig, showError } from "./config";
+import { config, showError } from "./config";
 
 const
     /** Crypto Key Processing */
@@ -73,9 +73,9 @@ const
         data: T
     ): Promise<string | undefined> => {
         try {
-            const { ENCRYPTION_KEY } = getConfig();
-            if (!ENCRYPTION_KEY) return JSON.stringify(data);
-            return await encryptData(data, ENCRYPTION_KEY);
+            return config?.encryptionKey ?
+                await encryptData(data, config.encryptionKey)
+                : JSON.stringify(data);
         } catch (e) {
             if (showError()) console.log(`encrypt failed`, e);
             try { return JSON.stringify(data); } catch (e) { };
@@ -86,9 +86,9 @@ const
         encrypted: string
     ): Promise<T | undefined> => {
         try {
-            const { ENCRYPTION_KEY } = getConfig();
-            if (!ENCRYPTION_KEY) return JSON.parse(encrypted) as T;
-            return await decryptData(encrypted, ENCRYPTION_KEY);
+            return config?.encryptionKey ?
+                await decryptData(encrypted, config.encryptionKey)
+                : JSON.parse(encrypted) as T;
         } catch (e) {
             if (showError()) console.log(`decrypt failed`, e);
         };

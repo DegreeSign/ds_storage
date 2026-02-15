@@ -1,4 +1,4 @@
-import { getConfig, showError } from "./config";
+import { config, showError } from "./config";
 import { saveDB, readDB } from "./db";
 import { encrypt, decrypt } from "./encrypt";
 import { StorageParams } from "./types";
@@ -10,15 +10,11 @@ const
         data
     }: StorageParams<T>): Promise<boolean> => {
         try {
-            const {
-                dbName,
-                storeName,
-            } = getConfig();
             return await saveDB({
                 key,
                 data: data ? await encrypt(data) : undefined,
-                dbName,
-                storeName,
+                dbName: config.dbName,
+                storeName: config.storeName,
             });
         } catch (e) {
             if (showError()) console.log(`saveSecure failed`, e);
@@ -30,16 +26,11 @@ const
         key: string
     ): Promise<T | undefined> => {
         try {
-            const
-                {
-                    dbName,
-                    storeName,
-                } = getConfig(),
-                data = await readDB({
-                    key,
-                    dbName,
-                    storeName,
-                });
+            const data = await readDB({
+                key,
+                dbName: config.dbName,
+                storeName: config.storeName,
+            });
             return data ? await decrypt<T>(data) : undefined;
         } catch (e) {
             if (showError()) console.log(`readSecure failed`, e);

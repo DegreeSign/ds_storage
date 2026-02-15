@@ -25,7 +25,14 @@ interface ConfigParams {
     storageKey: string;
     dbName?: string;
     storeName?: string;
-    encryptionKey?: string;
     hideErrors?: boolean;
+    encryptionKey?: string;
 }
-export { DBConfig, DBRead, DBSave, MigrationParams, StorageParams, ConfigParams, };
+interface ConfigInternal {
+    storageKey: string;
+    dbName: string;
+    storeName: string;
+    hideErrors: boolean;
+    encryptionKey?: CryptoKey;
+}
+export { DBConfig, DBRead, DBSave, MigrationParams, StorageParams, ConfigParams, ConfigInternal, };

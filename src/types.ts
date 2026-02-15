@@ -30,8 +30,16 @@ interface ConfigParams {
     storageKey: string;
     dbName?: string;
     storeName?: string;
-    encryptionKey?: string;
     hideErrors?: boolean;
+    encryptionKey?: string;
+}
+
+interface ConfigInternal {
+    storageKey: string;
+    dbName: string;
+    storeName: string;
+    hideErrors: boolean;
+    encryptionKey?: CryptoKey;
 }
 
 export {
@@ -41,4 +49,5 @@ export {
     MigrationParams,
     StorageParams,
     ConfigParams,
+    ConfigInternal,
 }

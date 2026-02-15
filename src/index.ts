@@ -1,4 +1,4 @@
-import { configureStorage, getConfig, migrateSecure } from "./config";
+import { configureStorage, config, migrateSecure } from "./config";
 import { readData, saveData } from "./storage";
 import { readLarge, saveLarge } from "./large";
 import { readSecure, saveSecure } from "./secure";
@@ -9,7 +9,7 @@ export {
     StorageParams,
     ConfigParams,
     configureStorage,
-    getConfig,
+    config,
     migrateSecure,
     readData,
     saveData,

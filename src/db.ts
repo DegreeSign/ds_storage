@@ -1,4 +1,4 @@
-import { getConfig, showError } from "./config";
+import { config, showError } from "./config";
 import { DBConfig, DBRead, DBSave } from "./types";
 
 const
@@ -9,10 +9,10 @@ const
         version = 1
     }: DBConfig = {}): Promise<IDBDatabase> => {
         return new Promise((resolve, reject) => {
-            dbName = dbName || getConfig().dbName;
+            dbName = dbName || config.dbName;
             const request = indexedDB.open(dbName, version);
             request.onupgradeneeded = () => {
-                storeName = storeName || getConfig().storeName;
+                storeName = storeName || config.storeName;
                 const db = request.result;
                 if (!db.objectStoreNames.contains(storeName))
                     db.createObjectStore(storeName, { keyPath: 'id' });

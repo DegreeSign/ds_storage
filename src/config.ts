@@ -1,15 +1,16 @@
 import { readDB, saveDB } from "./db";
 import { cryptoKey, decryptData, encryptData } from "./encrypt";
-import { ConfigParams, MigrationParams } from "./types";
-
-let
-    STORAGE_KEY = 'appData',
-    DB_NAME = 'appDB',
-    STORE_NAME = 'appStorage',
-    ENCRYPTION_KEY: CryptoKey | undefined,
-    HIDE_ERRORS = false;
+import { ConfigInternal, ConfigParams, MigrationParams } from "./types";
 
 const
+    /** Storage System Configuration */
+    config: ConfigInternal = {
+        storageKey: `appData`,
+        dbName: `appDB`,
+        storeName: `appStorage`,
+        encryptionKey: undefined,
+        hideErrors: false,
+    },
     /** Configure Storage System */
     configureStorage = async ({
         storageKey,
@@ -19,40 +20,17 @@ const
         hideErrors
     }: ConfigParams): Promise<void> => {
         try {
-
-            // Store new configuration
-            const config: ConfigParams = {
-                storageKey,
-                dbName: dbName || DB_NAME,
-                storeName: storeName || STORE_NAME,
-                encryptionKey
-            };
-
-            // Update variables
-            STORAGE_KEY = storageKey;
-            if (config.dbName) DB_NAME = config.dbName;
-            if (config.storeName) STORE_NAME = config.storeName;
-
-            // Set or update encryption key
-            ENCRYPTION_KEY = encryptionKey ? await cryptoKey(encryptionKey)
-                : undefined;
-
-            HIDE_ERRORS = hideErrors ?? HIDE_ERRORS;
+            if (storageKey) config.storageKey = storageKey;
+            if (dbName) config.dbName = dbName;
+            if (storeName) config.storeName = storeName;
+            if (encryptionKey) config.encryptionKey = await cryptoKey(encryptionKey)
+            if (hideErrors != undefined) config.hideErrors = hideErrors;
         } catch (e) {
             if (showError()) console.log(`configureStorage failed`, e);
         };
     },
-    /** Get Configuration */
-    getConfig = () => {
-        return {
-            storageKey: STORAGE_KEY,
-            dbName: DB_NAME,
-            storeName: STORE_NAME,
-            ENCRYPTION_KEY,
-            hideErrors: HIDE_ERRORS,
-        }
-    },
-    showError = () => !HIDE_ERRORS,
+    /** Log errors */
+    showError = () => !config.hideErrors,
     /** Migrate Data */
     migrateSecure = async ({
         storedKeys,
@@ -65,14 +43,14 @@ const
 
         // record old keys
         const
-            oldKey = ENCRYPTION_KEY,
-            oldDbName = DB_NAME,
-            oldStoreName = STORE_NAME;
+            oldKey = config.encryptionKey,
+            oldDbName = config.dbName,
+            oldStoreName = config.storeName;
 
         // update new keys
-        ENCRYPTION_KEY = await cryptoKey(newEncryptionKey) ?? ENCRYPTION_KEY;
-        DB_NAME = newDbName ?? DB_NAME;
-        STORE_NAME = newStoreName ?? STORE_NAME;
+        config.encryptionKey = await cryptoKey(newEncryptionKey) ?? config.encryptionKey;
+        config.dbName = newDbName ?? config.dbName;
+        config.storeName = newStoreName ?? config.storeName;
 
         // migrate storedKeys
         for (let i = 0; i < storedKeys.length; i++) {
@@ -89,16 +67,16 @@ const
                             : JSON.parse(raw)
                         : undefined,
                     encrypted = decrypted ?
-                        ENCRYPTION_KEY ?
-                            await encryptData(decrypted, ENCRYPTION_KEY)
+                        config.encryptionKey ?
+                            await encryptData(decrypted, config.encryptionKey)
                             : JSON.stringify(decrypted)
                         : undefined;
                 if (encrypted) // only save if data available
                     await saveDB({
                         key,
                         data: encrypted,
-                        dbName: DB_NAME,
-                        storeName: STORE_NAME
+                        dbName: config.dbName,
+                        storeName: config.storeName
                     });
             } catch (e) {
                 if (showError()) console.log(`migrateSecure failed`, key, e);
@@ -110,7 +88,7 @@ const
 
 export {
     configureStorage,
-    getConfig,
+    config,
     showError,
     migrateSecure,
 };

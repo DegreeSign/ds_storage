@@ -1,15 +1,11 @@
-import { ConfigParams, MigrationParams } from "./types";
+import { ConfigInternal, ConfigParams, MigrationParams } from "./types";
 declare const 
+/** Storage System Configuration */
+config: ConfigInternal, 
 /** Configure Storage System */
 configureStorage: ({ storageKey, dbName, storeName, encryptionKey, hideErrors }: ConfigParams) => Promise<void>, 
-/** Get Configuration */
-getConfig: () => {
-    storageKey: string;
-    dbName: string;
-    storeName: string;
-    ENCRYPTION_KEY: CryptoKey | undefined;
-    hideErrors: boolean;
-}, showError: () => boolean, 
+/** Log errors */
+showError: () => boolean, 
 /** Migrate Data */
 migrateSecure: ({ storedKeys, newEncryptionKey, newDbName, newStoreName, }: MigrationParams) => Promise<void>;
-export { configureStorage, getConfig, showError, migrateSecure, };
+export { configureStorage, config, showError, migrateSecure, };

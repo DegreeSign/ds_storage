@@ -1,4 +1,4 @@
-import { getConfig, showError } from "./config";
+import { config, showError } from "./config";
 import { saveDB, readDB } from "./db";
 import { StorageParams } from "./types";
 
@@ -12,7 +12,7 @@ const
             const {
                 dbName,
                 storeName,
-            } = getConfig();
+            } = config;
             return await saveDB({
                 key,
                 data: data ? JSON.stringify(data) : undefined,
@@ -33,7 +33,7 @@ const
                 {
                     dbName,
                     storeName,
-                } = getConfig(),
+                } = config,
                 data = await readDB({
                     key,
                     dbName,
