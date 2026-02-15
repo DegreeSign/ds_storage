@@ -3,22 +3,26 @@ import { saveDB, readDB } from "./db";
 import { StorageParams } from "./types";
 
 const
+    cachedData: {
+        [key: string]: any
+    } = {},
     /** Save Large Data (uses IndexedDB)*/
     saveLarge = async <T>({
         key,
         data
     }: StorageParams<T>): Promise<boolean> => {
         try {
-            const {
-                dbName,
-                storeName,
-            } = config;
+
+            // update cache
+            if (config.cacheStorage && data)
+                cachedData[key] = data;
+
             return await saveDB({
                 key,
                 data: data ? JSON.stringify(data) : undefined,
-                dbName,
-                storeName,
-            })
+                dbName: config.dbName,
+                storeName: config.storeName,
+            });
         } catch (e) {
             if (showError()) console.log(`saveLarge failed`, e);
         };
@@ -29,17 +33,24 @@ const
         key: string
     ): Promise<T | undefined> => {
         try {
+
+            // retrieve cache
+            if (config.cacheStorage && cachedData[key])
+                return cachedData[key];
+
             const
-                {
-                    dbName,
-                    storeName,
-                } = config,
-                data = await readDB({
+                raw = await readDB({
                     key,
-                    dbName,
-                    storeName,
-                });
-            return data ? JSON.parse(data) : undefined;
+                    dbName: config.dbName,
+                    storeName: config.storeName,
+                }),
+                data = raw ? JSON.parse(raw) : undefined;
+
+            // update cache
+            if (config.cacheStorage && data)
+                cachedData[key] = data;
+
+            return data
         } catch (e) {
             if (showError()) console.log(`readLarge failed`, e);
         };
