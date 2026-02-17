@@ -10,7 +10,6 @@ const
         storeName: `appStorage`,
         encryptionKey: undefined,
         hideErrors: false,
-        cacheStorage: true,
     },
     /** Configure Storage System */
     configureStorage = async ({
@@ -19,7 +18,6 @@ const
         storeName,
         encryptionKey,
         hideErrors,
-        cacheStorage,
     }: ConfigParams): Promise<void> => {
         try {
             if (storageKey) config.storageKey = storageKey;
@@ -27,7 +25,6 @@ const
             if (storeName) config.storeName = storeName;
             if (encryptionKey) config.encryptionKey = await cryptoKey(encryptionKey)
             if (hideErrors != undefined) config.hideErrors = hideErrors;
-            if (cacheStorage != undefined) config.cacheStorage = cacheStorage;
         } catch (e) {
             if (showError()) console.log(`configureStorage failed`, e);
         };

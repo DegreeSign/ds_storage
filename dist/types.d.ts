@@ -26,7 +26,6 @@ interface ConfigParams {
     dbName?: string;
     storeName?: string;
     hideErrors?: boolean;
-    cacheStorage?: boolean;
     encryptionKey?: string;
 }
 interface ConfigInternal {
@@ -34,7 +33,6 @@ interface ConfigInternal {
     dbName: string;
     storeName: string;
     hideErrors: boolean;
-    cacheStorage: boolean;
     encryptionKey?: CryptoKey;
 }
 export { DBConfig, DBRead, DBSave, MigrationParams, StorageParams, ConfigParams, ConfigInternal, };
