@@ -33,7 +33,7 @@ interface ConfigParams {
     hideErrors?: boolean;
     encryptionKey?: string;
     /** Prefix to tag sync-encrypted values with (default `ds:`) */
-    scPrefix?: string;
+    localStoragePrefix?: string;
 }
 
 interface ConfigInternal {
@@ -44,7 +44,7 @@ interface ConfigInternal {
     encryptionKey?: CryptoKey;
     encryptionKeyStr?: string;
     /** Prefix to tag sync-encrypted values with (default `ds:`) */
-    scPrefix: string;
+    localStoragePrefix: string;
 }
 
 export {

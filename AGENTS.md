@@ -9,3 +9,4 @@
 - When bumping the version, update it in ALL of these places:
   - `package.json` (`version`)
   - `README.md` (the CDN `@degreesign/storage@<version>` URL)
+  - `CHANGELOG.md` (add an entry for the new version; only document developer-facing functions/parameters)

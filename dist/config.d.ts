@@ -3,7 +3,7 @@ declare const
 /** Storage System Configuration */
 config: ConfigInternal, 
 /** Configure Storage System */
-configureStorage: ({ storageKey, dbName, storeName, encryptionKey, hideErrors, scPrefix, }: ConfigParams) => Promise<void>, 
+configureStorage: ({ storageKey, dbName, storeName, encryptionKey, hideErrors, localStoragePrefix, }: ConfigParams) => Promise<void>, 
 /**
  * Configure Storage System
  *
@@ -12,7 +12,7 @@ configureStorage: ({ storageKey, dbName, storeName, encryptionKey, hideErrors, s
  *   - encrypt, decrypt
  *   - saveSecure, readSecure
  */
-configureStorageSync: ({ storageKey, dbName, storeName, encryptionKey, hideErrors, scPrefix, }: ConfigParams) => void, 
+configureStorageSync: ({ storageKey, dbName, storeName, encryptionKey, hideErrors, localStoragePrefix, }: ConfigParams) => void, 
 /** Log errors */
 showError: () => boolean, 
 /** Migrate Data */

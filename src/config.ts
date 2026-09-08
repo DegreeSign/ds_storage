@@ -10,7 +10,7 @@ const
         storeName: `appStorage`,
         encryptionKey: undefined,
         hideErrors: false,
-        scPrefix: `ds:`,
+        localStoragePrefix: `ds:`,
     },
     /** Configure Storage System */
     configureStorage = async ({
@@ -19,10 +19,10 @@ const
         storeName,
         encryptionKey,
         hideErrors,
-        scPrefix,
+        localStoragePrefix,
     }: ConfigParams): Promise<void> => {
         try {
-            configureStorageSync({ storageKey, dbName, storeName, hideErrors, scPrefix });
+            configureStorageSync({ storageKey, dbName, storeName, hideErrors, localStoragePrefix });
             if (encryptionKey) {
                 config.encryptionKey = await cryptoKey(encryptionKey);
                 config.encryptionKeyStr = encryptionKey;
@@ -45,7 +45,7 @@ const
         storeName,
         encryptionKey,
         hideErrors,
-        scPrefix,
+        localStoragePrefix,
     }: ConfigParams): void => {
         try {
             if (storageKey) config.storageKey = storageKey;
@@ -53,7 +53,7 @@ const
             if (storeName) config.storeName = storeName;
             if (encryptionKey) config.encryptionKeyStr = encryptionKey;
             if (hideErrors != undefined) config.hideErrors = hideErrors;
-            if (scPrefix) config.scPrefix = scPrefix;
+            if (localStoragePrefix) config.localStoragePrefix = localStoragePrefix;
         } catch (e) {
             if (showError()) console.log(`configureStorageSync failed`, e);
         };
