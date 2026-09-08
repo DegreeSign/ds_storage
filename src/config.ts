@@ -23,7 +23,10 @@ const
             if (storageKey) config.storageKey = storageKey;
             if (dbName) config.dbName = dbName;
             if (storeName) config.storeName = storeName;
-            if (encryptionKey) config.encryptionKey = await cryptoKey(encryptionKey)
+            if (encryptionKey) {
+                config.encryptionKey = await cryptoKey(encryptionKey);
+                config.encryptionKeyStr = encryptionKey;
+            };
             if (hideErrors != undefined) config.hideErrors = hideErrors;
         } catch (e) {
             if (showError()) console.log(`configureStorage failed`, e);
@@ -49,6 +52,7 @@ const
 
         // update new keys
         config.encryptionKey = await cryptoKey(newEncryptionKey) ?? config.encryptionKey;
+        config.encryptionKeyStr = newEncryptionKey ?? config.encryptionKeyStr;
         config.dbName = newDbName ?? config.dbName;
         config.storeName = newStoreName ?? config.storeName;
 

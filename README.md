@@ -19,7 +19,7 @@ import {
 Use in browsers through CDN
 ```html
 <script 
-    src="https://cdn.jsdelivr.net/npm/@degreesign/storage@1.0.9/dist/browser/degreesign.min.js"
+    src="https://cdn.jsdelivr.net/npm/@degreesign/storage@1.0.10/dist/browser/degreesign.min.js"
 ></script>
 ```
 
@@ -50,7 +50,7 @@ const
     key = `sample_key`,
     data: SampleType = { id: `1`, name: 'Hasn', email: 'hasn@example.com' };
 
-/** quick unencrypted, only suitable for smaller data */
+/** saveData - unencrypted */
 // save 
 saveData({ key, data });
 // read
@@ -60,7 +60,7 @@ console.log(`unsecureData`, unsecureData);
 saveData({ key });
 
 
-/** secure, useful for larger data */
+/** saveSecure - encrypted */
 // save
 await saveSecure({ key, data });
 // read
@@ -68,4 +68,14 @@ const secureData = await readSecure<SampleType>(key);
 console.log(`secureData`, secureData);
 // clear
 await saveSecure({ key });
+
+
+/** saveSecureSync - encrypted */
+// save
+saveSecureSync({ key, data });
+// read
+const secureSyncData = readSecureSync<SampleType>(key);
+console.log(`secureSyncData`, secureSyncData);
+// clear
+saveSecureSync({ key });
 ```

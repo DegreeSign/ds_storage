@@ -3,7 +3,7 @@ import { saveDB, readDB } from "./db";
 import { StorageParams } from "./types";
 
 const
-    /** Save Large Data (uses IndexedDB)*/
+    /** Save Large Data (IndexedDB) - unencrypted */
     saveLarge = async <T>({
         key,
         data
@@ -20,7 +20,7 @@ const
         };
         return false
     },
-    /** Read Large Data (uses IndexedDB)*/
+    /** Read Large Data (IndexedDB) - unencrypted */
     readLarge = async <T>(
         key: string
     ): Promise<T | undefined> => {

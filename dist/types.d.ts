@@ -34,5 +34,6 @@ interface ConfigInternal {
     storeName: string;
     hideErrors: boolean;
     encryptionKey?: CryptoKey;
+    encryptionKeyStr?: string;
 }
 export { DBConfig, DBRead, DBSave, MigrationParams, StorageParams, ConfigParams, ConfigInternal, };

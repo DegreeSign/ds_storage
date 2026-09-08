@@ -2,7 +2,7 @@ import { showError } from "./config";
 import { StorageParams } from "./types";
 
 const
-    /** Save Data (uses localStorage)*/
+    /** Save Data (localStorage) - unencrypted */
     saveData = <T>({ key, data }: StorageParams<T>): void => {
         try {
             if (data === undefined) localStorage.removeItem(key);
@@ -11,7 +11,7 @@ const
             if (showError()) console.log(`saveData failed`, e);
         };
     },
-    /** Read Data (uses localStorage)*/
+    /** Read Data (localStorage) - unencrypted */
     readData = <T>(key: string): T | undefined => {
         try {
             const item = localStorage.getItem(key);
