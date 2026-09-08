@@ -10,6 +10,7 @@ const
         storeName: `appStorage`,
         encryptionKey: undefined,
         hideErrors: false,
+        scPrefix: `ds:`,
     },
     /** Configure Storage System */
     configureStorage = async ({
@@ -18,18 +19,43 @@ const
         storeName,
         encryptionKey,
         hideErrors,
+        scPrefix,
     }: ConfigParams): Promise<void> => {
         try {
-            if (storageKey) config.storageKey = storageKey;
-            if (dbName) config.dbName = dbName;
-            if (storeName) config.storeName = storeName;
+            configureStorageSync({ storageKey, dbName, storeName, hideErrors, scPrefix });
             if (encryptionKey) {
                 config.encryptionKey = await cryptoKey(encryptionKey);
                 config.encryptionKeyStr = encryptionKey;
             };
-            if (hideErrors != undefined) config.hideErrors = hideErrors;
         } catch (e) {
             if (showError()) console.log(`configureStorage failed`, e);
+        };
+    },
+    /**
+     * Configure Storage System
+     *
+     * For following functions use `configureStorage` instead:
+     *   - migrateSecure
+     *   - encrypt, decrypt
+     *   - saveSecure, readSecure
+     */
+    configureStorageSync = ({
+        storageKey,
+        dbName,
+        storeName,
+        encryptionKey,
+        hideErrors,
+        scPrefix,
+    }: ConfigParams): void => {
+        try {
+            if (storageKey) config.storageKey = storageKey;
+            if (dbName) config.dbName = dbName;
+            if (storeName) config.storeName = storeName;
+            if (encryptionKey) config.encryptionKeyStr = encryptionKey;
+            if (hideErrors != undefined) config.hideErrors = hideErrors;
+            if (scPrefix) config.scPrefix = scPrefix;
+        } catch (e) {
+            if (showError()) console.log(`configureStorageSync failed`, e);
         };
     },
     /** Log errors */
@@ -92,6 +118,7 @@ const
 
 export {
     configureStorage,
+    configureStorageSync,
     config,
     showError,
     migrateSecure,

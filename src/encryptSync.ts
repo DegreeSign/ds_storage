@@ -22,7 +22,7 @@ const
                 out = new Uint8Array(nonce.length + plain.length);
             out.set(nonce);
             if (cipher) out.set(cipher, nonce.length);
-            return `sc:${btoa(String.fromCharCode(...out))}`;
+            return `${config.scPrefix}${btoa(String.fromCharCode(...out))}`;
         } catch (e) {
             if (showError()) console.log(`encryptDataSync failed`, e);
             try { return JSON.stringify(data); } catch (e) { };
@@ -32,8 +32,8 @@ const
     decryptDataSync = <T>(encrypted: string, enKey: string): T | undefined => {
         try {
             const
-                all = Uint8Array.from(atob(encrypted.startsWith(`sc:`) ?
-                    encrypted.slice(3)
+                all = Uint8Array.from(atob(encrypted.startsWith(config.scPrefix) ?
+                    encrypted.slice(config.scPrefix.length)
                     : encrypted), c => c.charCodeAt(0)),
                 nonce = all.slice(0, 8),
                 bytes = xorCipher(all.slice(8), enKey, nonce);

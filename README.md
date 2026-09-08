@@ -19,7 +19,7 @@ import {
 Use in browsers through CDN
 ```html
 <script 
-    src="https://cdn.jsdelivr.net/npm/@degreesign/storage@1.0.10/dist/browser/degreesign.min.js"
+    src="https://cdn.jsdelivr.net/npm/@degreesign/storage@1.1.1/dist/browser/degreesign.min.js"
 ></script>
 ```
 
@@ -33,25 +33,26 @@ const {
 } = window.stored;
 ```
 
-## Usage
+## Sync Usage
+
+Configure the storage system with `configureStorageSync` (sync — sets `encryptionKeyStr` only, no key derivation):
 
 ```typescript
-// configure storage system
-await configureStorage({
+configureStorageSync({
     storageKey: 'app_name',
-    dbName: 'database_name',
-    storeName: 'dataset_name',
     encryptionKey: 'encryption_key',
     hideErrors: true,
 });
+```
 
+```typescript
 // sample data
-const 
+const
     key = `sample_key`,
     data: SampleType = { id: `1`, name: 'Hasn', email: 'hasn@example.com' };
 
-/** saveData - unencrypted */
-// save 
+/** saveData - unencrypted (localStorage) */
+// save
 saveData({ key, data });
 // read
 const unsecureData = readData<SampleType>(key);
@@ -59,18 +60,7 @@ console.log(`unsecureData`, unsecureData);
 // clear
 saveData({ key });
 
-
-/** saveSecure - encrypted */
-// save
-await saveSecure({ key, data });
-// read
-const secureData = await readSecure<SampleType>(key);
-console.log(`secureData`, secureData);
-// clear
-await saveSecure({ key });
-
-
-/** saveSecureSync - encrypted */
+/** saveSecureSync - encrypted (localStorage) */
 // save
 saveSecureSync({ key, data });
 // read
@@ -79,3 +69,35 @@ console.log(`secureSyncData`, secureSyncData);
 // clear
 saveSecureSync({ key });
 ```
+
+## Async Usage
+
+Configure the storage system with `configureStorage` (async — derives an AES-GCM `CryptoKey` from `encryptionKey`). This enables the additional async functionality below:
+
+```typescript
+await configureStorage({
+    storageKey: 'app_name',
+    dbName: 'database_name',
+    storeName: 'dataset_name',
+    encryptionKey: 'encryption_key',
+    hideErrors: true,
+});
+```
+
+```typescript
+// sample data
+const
+    key = `sample_key`,
+    data: SampleType = { id: `1`, name: 'Hasn', email: 'hasn@example.com' };
+
+/** saveSecure - encrypted (IndexedDB) */
+// save
+await saveSecure({ key, data });
+// read
+const secureData = await readSecure<SampleType>(key);
+console.log(`secureData`, secureData);
+// clear
+await saveSecure({ key });
+```
+
+> Note: `configureStorage` enables `migrateSecure`, `encrypt`, `decrypt`, `saveSecure`, and `readSecure`. The `+Sync` functions work in both configurations.

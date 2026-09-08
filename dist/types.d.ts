@@ -27,6 +27,8 @@ interface ConfigParams {
     storeName?: string;
     hideErrors?: boolean;
     encryptionKey?: string;
+    /** Prefix to tag sync-encrypted values with (default `ds:`) */
+    scPrefix?: string;
 }
 interface ConfigInternal {
     storageKey: string;
@@ -35,5 +37,7 @@ interface ConfigInternal {
     hideErrors: boolean;
     encryptionKey?: CryptoKey;
     encryptionKeyStr?: string;
+    /** Prefix to tag sync-encrypted values with (default `ds:`) */
+    scPrefix: string;
 }
 export { DBConfig, DBRead, DBSave, MigrationParams, StorageParams, ConfigParams, ConfigInternal, };

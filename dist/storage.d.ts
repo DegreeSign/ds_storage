@@ -1,7 +1,7 @@
 import { StorageParams } from "./types";
 declare const 
-/** Save Data (uses localStorage)*/
+/** Save Data (localStorage) - unencrypted */
 saveData: <T>({ key, data }: StorageParams<T>) => void, 
-/** Read Data (uses localStorage)*/
+/** Read Data (localStorage) - unencrypted */
 readData: <T>(key: string) => T | undefined;
 export { saveData, readData, };
