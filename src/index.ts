@@ -3,7 +3,7 @@ import { readData, saveData } from "./storage";
 import { readLarge, saveLarge } from "./large";
 import { readSecure, saveSecure, readSecureSync, saveSecureSync } from "./secure";
 import { StorageParams, ConfigParams } from "./types";
-import { decryptData, encryptData } from "./encrypt";
+import { cryptoKey, decryptData, encryptData } from "./encrypt";
 import { encryptDataSync, decryptDataSync } from "./encryptSync";
 
 export {
@@ -25,4 +25,5 @@ export {
     decryptData,
     encryptDataSync,
     decryptDataSync,
+    cryptoKey,
 };
