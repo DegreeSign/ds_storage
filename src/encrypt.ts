@@ -1,4 +1,5 @@
 import { config, showError } from "./config";
+import { bytesToBase64, base64ToBytes } from "./utils";
 
 const
     /** Crypto Key Processing */
@@ -30,7 +31,15 @@ const
             if (showError()) console.log(`processKey failed`, e);
         };
     },
-    /** AES-GCM data encryption using custom key */
+    /** Encrypt data (AES-GCM) using custom key.
+     *
+     * Serializes data to JSON and AES-GCM encrypts it into a base64 string.
+     * In V8/Chromium the ~512 MB string cap limits a single value near ~400 MB.
+     *
+     * - No hard size limit.
+     * - Tested up to ~400 MB.
+     * - Returns ~33% larger base64.
+     * - Capped by string length. */
     encryptData = async <T>(data: T, key: CryptoKey): Promise<string | undefined> => {
         try {
             const
@@ -45,17 +54,22 @@ const
                 result = new Uint8Array(iv.length + encryptedArray.length);
             result.set(iv);
             result.set(encryptedArray, iv.length);
-            return btoa(String.fromCharCode(...result));
+            return bytesToBase64(result);
         } catch (e) {
             if (showError()) console.log(`encryptData failed`, e);
             try { return JSON.stringify(data); } catch (e) { };
         };
     },
-    /** AES-GCM data decryption using custom key */
+    /** Decrypt data (AES-GCM) using custom key.
+     *
+     * Decodes base64 and AES-GCM decrypts ciphertext from `encryptData`.
+     *
+     * - No hard size limit.
+     * - Input decoded in memory. */
     decryptData = async <T>(encrypted: string, key: CryptoKey): Promise<T | undefined> => {
         try {
             const
-                encryptedArray = Uint8Array.from(atob(encrypted), c => c.charCodeAt(0)),
+                encryptedArray = base64ToBytes(encrypted),
                 iv = encryptedArray.slice(0, 12),
                 data = encryptedArray.slice(12),
                 decrypted = await crypto.subtle.decrypt(
@@ -68,7 +82,12 @@ const
             if (showError()) console.log(`decryptData failed`, e);
         };
     },
-    /** AES-GCM data encryption using set key */
+    /** Encrypt data using configured key.
+     *
+     * Encrypts with the configured `encryptionKey`, or plain JSON without one.
+     *
+     * - Same limits as `encryptData`.
+     * - Plain JSON when no key. */
     encrypt = async <T>(
         data: T
     ): Promise<string | undefined> => {
@@ -81,7 +100,12 @@ const
             try { return JSON.stringify(data); } catch (e) { };
         };
     },
-    /** AES-GCM data decryption using set key */
+    /** Decrypt data using configured key.
+     *
+     * Decrypts with the configured `encryptionKey`, or plain JSON-parses without one.
+     *
+     * - Same limits as `decryptData`.
+     * - Plain JSON when no key. */
     decrypt = async <T>(
         encrypted: string
     ): Promise<T | undefined> => {

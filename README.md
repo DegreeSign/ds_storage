@@ -19,7 +19,7 @@ import {
 Use in browsers through CDN
 ```html
 <script 
-    src="https://cdn.jsdelivr.net/npm/@degreesign/storage@1.1.2/dist/browser/degreesign.min.js"
+    src="https://cdn.jsdelivr.net/npm/@degreesign/storage@1.1.3/dist/browser/degreesign.min.js"
 ></script>
 ```
 
@@ -51,7 +51,7 @@ const
     key = `sample_key`,
     data: SampleType = { id: `1`, name: 'Hasn', email: 'hasn@example.com' };
 
-/** saveData - unencrypted (localStorage) */
+/** saveData - unencrypted (localStorage). Limit: up to ~10 MB per origin. */
 // save
 saveData({ key, data });
 // read
@@ -60,7 +60,7 @@ console.log(`unsecureData`, unsecureData);
 // clear
 saveData({ key });
 
-/** saveSecureSync - encrypted (localStorage) */
+/** saveSecureSync - encrypted (localStorage). Limit: up to ~10 MB per origin. */
 // save
 saveSecureSync({ key, data });
 // read
@@ -90,7 +90,7 @@ const
     key = `sample_key`,
     data: SampleType = { id: `1`, name: 'Hasn', email: 'hasn@example.com' };
 
-/** saveSecure - encrypted (IndexedDB) */
+/** saveSecure - encrypted (IndexedDB). Limit: up to ~1 GB (browser-dependent). */
 // save
 await saveSecure({ key, data });
 // read

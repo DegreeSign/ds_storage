@@ -3,7 +3,13 @@ import { saveDB, readDB } from "./db";
 import { StorageParams } from "./types";
 
 const
-    /** Save Large Data (IndexedDB) - unencrypted */
+    /** Save large data to IndexedDB.
+     *
+     * Stores a JSON string as one record, subject to the browser's per-origin quota.
+     *
+     * - No fixed size cap.
+     * - Quota up to ~1 GB.
+     * - Record held in memory. */
     saveLarge = async <T>({
         key,
         data
@@ -20,7 +26,11 @@ const
         };
         return false
     },
-    /** Read Large Data (IndexedDB) - unencrypted */
+    /** Read large data from IndexedDB.
+     *
+     * Reads and parses a JSON record saved by `saveLarge`.
+     *
+     * - Quota up to ~1 GB. */
     readLarge = async <T>(
         key: string
     ): Promise<T | undefined> => {

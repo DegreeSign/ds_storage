@@ -5,7 +5,13 @@ import { encryptSync, decryptSync } from "./encryptSync";
 import { StorageParams } from "./types";
 
 const
-    /** Save Secure Data (IndexedDB) - encrypted */
+    /** Save secure data to IndexedDB.
+     *
+     * AES-GCM encrypts data to base64 and stores it as one IndexedDB record.
+     *
+     * - Quota up to ~1 GB.
+     * - Base64 adds ~33% overhead.
+     * - Buffers held in memory. */
     saveSecure = async <T>({
         key,
         data
@@ -22,7 +28,11 @@ const
         };
         return false
     },
-    /** Read Secure Data (IndexedDB) - encrypted */
+    /** Read secure data from IndexedDB.
+     *
+     * Reads and decrypts an AES-GCM record saved by `saveSecure`.
+     *
+     * - Quota up to ~1 GB. */
     readSecure = async <T>(
         key: string
     ): Promise<T | undefined> => {
@@ -37,7 +47,13 @@ const
             if (showError()) console.log(`readSecure failed`, e);
         };
     },
-    /** Save Secure Data (localStorage) - encrypted */
+    /** Save secure data to localStorage.
+     *
+     * XOR-encrypts data synchronously to a prefixed base64 string for localStorage.
+     *
+     * - Quota up to 10 MB.
+     * - Base64 adds ~33% overhead.
+     * - Synchronous, blocks UI. */
     saveSecureSync = <T>({
         key,
         data
@@ -51,7 +67,11 @@ const
         };
         return false;
     },
-    /** Read Secure Data (localStorage) - encrypted */
+    /** Read secure data from localStorage.
+     *
+     * Reads and decrypts a prefixed XOR/base64 entry saved by `saveSecureSync`.
+     *
+     * - Quota up to 10 MB. */
     readSecureSync = <T>(
         key: string
     ): T | undefined => {

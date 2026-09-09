@@ -1,4 +1,5 @@
 import { config, showError } from "./config";
+import { bytesToBase64, base64ToBytes } from "./utils";
 
 const
     /** Shared XOR en/decode (key + nonce keystream) — obfuscation only. */
@@ -12,7 +13,16 @@ const
             if (showError()) console.log(`xorCipher failed`, e);
         };
     },
-    /** Simple weak XOR cipher using native crypto randomness — obfuscation only. */
+    /** Encrypt data using XOR cipher.
+     *
+     * Weak obfuscation-only XOR cipher using native crypto randomness and a custom key.
+     * In V8/Chromium the ~512 MB string cap limits a single value near ~400 MB.
+     *
+     * - No hard size limit.
+     * - Tested up to ~400 MB.
+     * - Synchronous, blocks UI.
+     * - Prefix + base64 output.
+     * - Capped by string length. */
     encryptDataSync = <T>(data: T, enKey: string): string | undefined => {
         try {
             const
@@ -22,19 +32,24 @@ const
                 out = new Uint8Array(nonce.length + plain.length);
             out.set(nonce);
             if (cipher) out.set(cipher, nonce.length);
-            return `${config.localStoragePrefix}${btoa(String.fromCharCode(...out))}`;
+            return `${config.localStoragePrefix}${bytesToBase64(out)}`;
         } catch (e) {
             if (showError()) console.log(`encryptDataSync failed`, e);
             try { return JSON.stringify(data); } catch (e) { };
         };
     },
-    /** Simple weak XOR decipher — obfuscation only. */
+    /** Decrypt data using XOR cipher.
+     *
+     * Weak obfuscation-only XOR decipher for prefixed base64 ciphertext.
+     *
+     * - Same limits as encryption.
+     * - Strips stored prefix. */
     decryptDataSync = <T>(encrypted: string, enKey: string): T | undefined => {
         try {
             const
-                all = Uint8Array.from(atob(encrypted.startsWith(config.localStoragePrefix) ?
+                all = base64ToBytes(encrypted.startsWith(config.localStoragePrefix) ?
                     encrypted.slice(config.localStoragePrefix.length)
-                    : encrypted), c => c.charCodeAt(0)),
+                    : encrypted),
                 nonce = all.slice(0, 8),
                 bytes = xorCipher(all.slice(8), enKey, nonce);
             return bytes ? JSON.parse(new TextDecoder().decode(bytes)) as T : undefined;
@@ -42,7 +57,12 @@ const
             if (showError()) console.log(`decryptDataSync failed`, e);
         };
     },
-    /** XOR data encryption using set key */
+    /** Encrypt data using configured key.
+     *
+     * XOR-encrypts with the configured `encryptionKeyStr`, or plain JSON without one.
+     *
+     * - Same limits as `encryptDataSync`.
+     * - Plain JSON when no key. */
     encryptSync = <T>(data: T): string | undefined => {
         try {
             return config?.encryptionKeyStr ?
@@ -53,7 +73,12 @@ const
             try { return JSON.stringify(data); } catch (e) { };
         };
     },
-    /** XOR data decryption using set key */
+    /** Decrypt data using configured key.
+     *
+     * XOR-decrypts with the configured `encryptionKeyStr`, or plain JSON-parses without one.
+     *
+     * - Same limits as `decryptDataSync`.
+     * - Plain JSON when no key. */
     decryptSync = <T>(encrypted: string): T | undefined => {
         try {
             return config?.encryptionKeyStr ?
