@@ -1,7 +1,7 @@
 {
   "name": "@degreesign/storage",
-  "version": "1.1.4",
-  "description": "DegreeSign Storage System",
+  "version": "1.1.5",
+  "description": "Typed browser and Node storage for encrypted and unencrypted data: localStorage, IndexedDB, AES-GCM and XOR encryption in one tiny, zero-dependency package.",
   "main": "dist/node/degreesign.node.min.js",
   "module": "dist/node/degreesign.node.min.js",
   "browser": "dist/browser/degreesign.min.js",
@@ -15,8 +15,19 @@
   },
   "keywords": [
     "DegreeSign",
-    "Web Storage System",
-    "Web App"
+    "storage",
+    "localStorage",
+    "IndexedDB",
+    "encrypted storage",
+    "AES-GCM",
+    "XOR cipher",
+    "secure storage",
+    "browser storage",
+    "node storage",
+    "TypeScript",
+    "offline storage",
+    "key-value store",
+    "zero dependency"
   ],
   "author": "DegreeSign",
   "license": "MIT",
